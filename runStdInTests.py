@@ -58,7 +58,7 @@ def findDifferences(testInPath, testOutPath):
     """
     Looks for differences between files with ".out" format located in testInPath and compares them to files with
      same name and ".myout" extension. differences compared with bash diff command. These are piped to stdout and saved
-      in a folder called differences.txt, which is saved to
+      in a folder called differences.txt, which is saved to testOutPath
     :param testInPath: relative path to this file where expected output paths are located
     :param testOutPath: relative path where actual test results are located
     :return:
@@ -67,16 +67,17 @@ def findDifferences(testInPath, testOutPath):
         testInPath += '/'
     if testOutPath[-1] != '/':
         testOutPath += '/'
-
+    #clearing contents of differences.txt
     os.system(f"> differences.txt")
     for filename in getFileNames(testInPath):
         # removing extension from names
         rootname = re.search(r'(.*)\.in$', filename).group(1)
         os.system(f"echo \"\n\n\n=========differences in test {filename} ========= \">>  differences.txt")
         os.system(f"diff {testInPath}{rootname}.out {testOutPath}{rootname}.myout>>  differences.txt")
+    #piping differences to stdout
     os.system(f"cat differences.txt")
 
-
+#change values below or comment out
 runTestsInFilePath('ruby', './lab3.rb', './tests', './')
 findDifferences('./tests', './')
 
